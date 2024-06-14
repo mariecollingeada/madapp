@@ -1,6 +1,8 @@
 package com.example.greetingcard.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,22 +15,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.wear.compose.material3.ripple
 import com.example.greetingcard.R
 import com.example.greetingcard.models.Vendor
+import com.example.greetingcard.ui.theme.screens.Routes
 import com.example.greetingcard.viewmodels.VendorViewModel
 
 
 @Composable
-fun VendorList(viewModel: VendorViewModel) {
+fun VendorResults(viewModel: VendorViewModel, navController: NavHostController) {
     val vendors by viewModel.vendors.observeAsState(emptyList())
     LazyColumn (contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp)) {
         items(vendors) {
                 vendor ->
-            VendorCard(vendor)
+            VendorCard(vendor = vendor) {
+                navController.navigate(Routes.VENDOR_INFO_SCREEN)
+            }
         }
     }
     DisposableEffect(Unit) {
@@ -38,7 +47,8 @@ fun VendorList(viewModel: VendorViewModel) {
 }
 
 @Composable
-fun VendorCard(vendor: Vendor) {
+fun VendorCard(vendor: Vendor, onClick: (Int) -> Unit) {
+    val interactionSource = remember { MutableInteractionSource() }
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -46,7 +56,11 @@ fun VendorCard(vendor: Vendor) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-//            .size(width = 100.dp, height = 100.dp)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = ripple(),
+                onClick = {onClick(vendor.id)}
+            )
     ) {
         Image(painter = painterResource(id = R.drawable.little), contentDescription = null)
         Text(

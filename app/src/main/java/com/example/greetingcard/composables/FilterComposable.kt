@@ -18,15 +18,13 @@ import androidx.compose.ui.Modifier
 import com.example.greetingcard.viewmodels.VendorViewModel
 
 @Composable
-fun FilterList(viewModel: VendorViewModel) {
+fun FilterChips(viewModel: VendorViewModel) {
     LazyRow {
         item { VendorFilter(type = "VENUE", onFilterSelected = viewModel::setSelectedFilter) }
         item { VendorFilter(type = "DECORATOR", onFilterSelected = viewModel::setSelectedFilter) }
         item { VendorFilter(type = "CATERER", onFilterSelected = viewModel::setSelectedFilter) }
         item { VendorFilter(type = "MISC", onFilterSelected = viewModel::setSelectedFilter) }
     }
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,13 +1,14 @@
 package com.example.greetingcard.viewmodels
 
-import android.provider.Telephony.Mms.Part
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.greetingcard.models.Vendor
 import com.example.greetingcard.networking.PartyProApi
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.launch
 
 class VendorViewModel : ViewModel() {
@@ -18,8 +19,12 @@ class VendorViewModel : ViewModel() {
     private val _selectedFilter = MutableLiveData<String>()
     val selectedFilter: LiveData<String> = _selectedFilter
 
-    private val _searchQuery = MutableLiveData<String>()
-    val searchQuery: LiveData<String> = _searchQuery
+    private val _searchResults = MutableLiveData<String?>(null)
+    val searchResults: LiveData<String?> = _searchResults
+
+    private val _selectedVendor = MutableLiveData<Int?>(null)
+    val selectedVendor: LiveData<Int?> = _selectedVendor
+
 
     init {
         getVendors()
@@ -58,13 +63,15 @@ class VendorViewModel : ViewModel() {
     }
 
     fun getVendorBySearchQuery(query: String) {
+        Log.d("query", query)
         viewModelScope.launch {
             try {
-                val response = PartyProApi.vendorsApi.getVendorBySearchQuery(query)
+                val searchObject = SearchObject(query)
+                val response = PartyProApi.vendorsApi.getVendorBySearchQuery(searchObject)
                 if (response.isNotEmpty()) {
                     _vendors.value = response
                 } else {
-                    Log.d("VendorViewModel", "No vendors found by type")
+                    Log.d("VendorViewModel", "No vendors found")
                 }
             } catch (e: Exception) {
                 // Handle errors here
@@ -73,22 +80,42 @@ class VendorViewModel : ViewModel() {
         }
     }
 
-        fun setSelectedFilter(filter: String) {
-            _selectedFilter.value = filter
-            if (filter.isEmpty()) {
-                getVendors()
-            } else {
-                getVendorsByType(filter)
-            }
-        }
-
-        fun setSearchQuery(query: String) {
-            _searchQuery.value = query
-            if (query.isEmpty()) {
-                getVendors()
-            } else {
-                getVendorBySearchQuery(query)
+    fun getVendorById(id: Int) {
+        viewModelScope.launch {
+            try {
+                val response = PartyProApi.vendorsApi.getVendorById(id)
+                if (response.isNotEmpty()) {
+                    _vendors.value = response
+                } else {
+                    Log.d("VendorViewModel", "No vendors found")
+                }
+            } catch (e: Exception) {
+                // Handle errors here
+                e.printStackTrace()
             }
         }
     }
+
+    data class SearchObject(
+        @SerializedName("searchQuery") val searchQuery: String
+    )
+
+
+
+    fun setSelectedFilter(filter: String) {
+        _selectedFilter.value = filter
+        if (filter.isEmpty()) {
+            getVendors()
+        } else {
+            getVendorsByType(filter)
+        }
+    }
+
+    fun setSelectedVendor(selectedVendor: Int){
+        _selectedVendor.value = selectedVendor
+        getVendorById(selectedVendor)
+
+    }
+
+}
 
