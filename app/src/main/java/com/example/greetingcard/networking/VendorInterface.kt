@@ -17,6 +17,4 @@ interface VendorInterface {
     @POST("/api/vendor/filter/search")
     suspend fun getVendorBySearchQuery(@Body query: VendorViewModel.SearchObject): List<Vendor>
 
-    @GET("/api/vendor/{id}")
-    suspend fun getVendorById(@Path("id") type: Int): List<Vendor>
 }

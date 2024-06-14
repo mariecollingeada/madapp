@@ -2,6 +2,7 @@ package com.example.greetingcard.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.vector.VNode
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,8 +23,8 @@ class VendorViewModel : ViewModel() {
     private val _searchResults = MutableLiveData<String?>(null)
     val searchResults: LiveData<String?> = _searchResults
 
-    private val _selectedVendor = MutableLiveData<Int?>(null)
-    val selectedVendor: LiveData<Int?> = _selectedVendor
+    private val _selectedVendor = MutableLiveData<Vendor>(null)
+    val selectedVendor: LiveData<Vendor> = _selectedVendor
 
 
     init {
@@ -80,21 +81,6 @@ class VendorViewModel : ViewModel() {
         }
     }
 
-    fun getVendorById(id: Int) {
-        viewModelScope.launch {
-            try {
-                val response = PartyProApi.vendorsApi.getVendorById(id)
-                if (response.isNotEmpty()) {
-                    _vendors.value = response
-                } else {
-                    Log.d("VendorViewModel", "No vendors found")
-                }
-            } catch (e: Exception) {
-                // Handle errors here
-                e.printStackTrace()
-            }
-        }
-    }
 
     data class SearchObject(
         @SerializedName("searchQuery") val searchQuery: String
@@ -111,10 +97,9 @@ class VendorViewModel : ViewModel() {
         }
     }
 
-    fun setSelectedVendor(selectedVendor: Int){
+    fun setSelectedVendor(selectedVendor: Vendor){
         _selectedVendor.value = selectedVendor
-        getVendorById(selectedVendor)
-
+//        getVendorById(selectedVendor.id)
     }
 
 }

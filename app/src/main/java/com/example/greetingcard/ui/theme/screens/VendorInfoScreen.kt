@@ -14,15 +14,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
+import com.example.greetingcard.models.Vendor
 import com.example.greetingcard.viewmodels.VendorViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VendorInfoScreen(viewModel: VendorViewModel, navController: NavHostController) {
+    val selectedVendor by viewModel.selectedVendor.observeAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,8 +56,9 @@ fun VendorInfoScreen(viewModel: VendorViewModel, navController: NavHostControlle
     { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(
-                text = "Vendor info page"
+                text = "Vendor info page" 
             )
+            selectedVendor?.title?.let { Text(text = it) }
             Button(onClick = { navController.navigate(Routes.WELCOME_SCREEN) }) {
                 Text(text = "Back")
             }

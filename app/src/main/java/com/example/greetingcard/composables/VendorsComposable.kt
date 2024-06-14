@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.wear.compose.material3.ripple
 import com.example.greetingcard.R
@@ -35,7 +34,8 @@ fun VendorResults(viewModel: VendorViewModel, navController: NavHostController) 
     LazyColumn (contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp)) {
         items(vendors) {
                 vendor ->
-            VendorCard(vendor = vendor) {
+            VendorCard(vendor = vendor, ) {
+                viewModel.setSelectedVendor(vendor)
                 navController.navigate(Routes.VENDOR_INFO_SCREEN)
             }
         }
