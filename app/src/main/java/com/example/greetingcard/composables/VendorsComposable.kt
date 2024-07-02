@@ -34,7 +34,7 @@ fun VendorResults(viewModel: VendorViewModel, navController: NavHostController) 
     LazyColumn (contentPadding = PaddingValues(horizontal = 24.dp, vertical = 24.dp)) {
         items(vendors) {
                 vendor ->
-            VendorCard(vendor = vendor, ) {
+            VendorCard(vendor = vendor) {
                 viewModel.setSelectedVendor(vendor)
                 navController.navigate(Routes.VENDOR_INFO_SCREEN)
             }

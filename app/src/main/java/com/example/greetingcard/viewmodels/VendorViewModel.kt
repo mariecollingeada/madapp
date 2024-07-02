@@ -1,8 +1,6 @@
 package com.example.greetingcard.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.vector.VNode
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,7 +24,6 @@ class VendorViewModel : ViewModel() {
     private val _selectedVendor = MutableLiveData<Vendor>(null)
     val selectedVendor: LiveData<Vendor> = _selectedVendor
 
-
     init {
         getVendors()
     }
@@ -41,7 +38,6 @@ class VendorViewModel : ViewModel() {
                     Log.d("VendorViewModel", "No vendors found")
                 }
             } catch (e: Exception) {
-                // Handle errors here
                 e.printStackTrace()
             }
         }
@@ -57,7 +53,6 @@ class VendorViewModel : ViewModel() {
                     Log.d("VendorViewModel", "No vendors found by type")
                 }
             } catch (e: Exception) {
-                // Handle errors here
                 e.printStackTrace()
             }
         }
@@ -75,18 +70,14 @@ class VendorViewModel : ViewModel() {
                     Log.d("VendorViewModel", "No vendors found")
                 }
             } catch (e: Exception) {
-                // Handle errors here
                 e.printStackTrace()
             }
         }
     }
 
-
     data class SearchObject(
         @SerializedName("searchQuery") val searchQuery: String
     )
-
-
 
     fun setSelectedFilter(filter: String) {
         _selectedFilter.value = filter
@@ -99,7 +90,6 @@ class VendorViewModel : ViewModel() {
 
     fun setSelectedVendor(selectedVendor: Vendor){
         _selectedVendor.value = selectedVendor
-//        getVendorById(selectedVendor.id)
     }
 
 }
